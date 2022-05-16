@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+
+contract ex001{
+    struct cliente{
+        string nome;
+        address wallet;
+        uint256 dinheiro;
+    }
+
+
+    cliente[] public cadastro;
+    mapping(address => string) public carteiradocliente;
+    function armazenar(string memory _nome, address _wallet, uint256 _dinheiro) public {
+        cadastro.push(cliente(_nome, _wallet, _dinheiro));
+        carteiradocliente[_wallet] = _nome;
+    }
+}
