@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+
+contract ex002{
+    struct cliente {
+        string nome;
+        uint256 idade;
+        address carteira;
+        uint256 dinheiro;
+    }
+    cliente[] public cadastro;
+    // Para poder tomar uma carteira e então adicionar, precisamos mapear a carteira ao dinheiro.
+    mapping(address => uint256) public dinheirodacarteira; 
+
+
+    function addcliente(string memory _n, uint256 _i, address _c, uint256 _d) public {
+        cadastro.push(cliente(_n, _i, _c, _d));
+        dinheirodacarteira[_c] = _d; /// Sempre cuidado com esse colchetes! Mapping != ""function"".
+    }
+
+
+    function add30(address _carteira) public {
+        dinheirodacarteira[_carteira] += 30; // Adicionando 30 reais na carteira! :3
+    }
+}
