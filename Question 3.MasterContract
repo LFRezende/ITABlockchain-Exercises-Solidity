@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "./ex003_sub.sol";
+contract ex003_mestre{
+
+    ex003_sub[] public contratos;
+
+    function addContrato() public {
+        ex003_sub ctt = new ex003_sub();
+        contratos.push(ctt);
+    }
+    function cadastrarcliente(string memory _nome, uint256 _idade, uint256 _index) public {
+        contratos[_index].addCliente(_nome, _idade);
+    }
+    function recuperarIdade(string memory _nome, uint256 _index) public view returns (uint256){
+        return contratos[_index].recuperar(_nome);
+    }
+}
