@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ex003_sub{
+    struct cliente{
+        string nome;
+        uint256 idade;
+    }
+
+    cliente[] public cadastro;
+    mapping(uint256 => string) public nomedovelho;
+    mapping(string => uint256) public idadedonome;
+    function addCliente(string memory _nome, uint256 _idade) public {
+        cadastro.push(cliente(_nome, _idade));
+        nomedovelho[_idade] = _nome;
+        idadedonome[_nome] = _idade;
+    }
+    function recuperar(string memory _nome) public view returns(uint256){
+        return idadedonome[_nome];
+    }
+    function recuperar_nome(uint256 _idade) public view returns(string memory) {
+        return nomedovelho[_idade];
+    }
+}
+
+// Author: Luis Felipe Rezende, ITA, Class of 2024 - Brazil
