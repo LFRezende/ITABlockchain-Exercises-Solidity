@@ -7,6 +7,7 @@ The _ITA Blockchain Club_ is a student-run initiative in AIT, focused on learnin
 *Feel free to use this material*, we just ask you credit the source of this material in your *blockchain endeavours*.
 We'd love to hear from you! Follow us on:
 https://www.instagram.com/ita.blockchain/
+
 https://br.linkedin.com/company/ita-blockchain?trk=public_profile_topcard-current-company
 The complete code was written by Luis Felipe Rezende.
 Any suggestions or corrections, please let me know!
