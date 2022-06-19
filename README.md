@@ -9,6 +9,7 @@ We'd love to hear from you! Follow us on:
 https://www.instagram.com/ita.blockchain/
 
 https://br.linkedin.com/company/ita-blockchain?trk=public_profile_topcard-current-company
+
 The complete code was written by Luis Felipe Rezende.
 Any suggestions or corrections, please let me know!
 Also, feel free to e-mail me at:
