@@ -1,0 +1,80 @@
+# Importar padrão de compilação e install_solc, além da sintaxe json.
+from web3 import Web3
+import json
+import os
+from solcx import (
+    compile_standard,
+    install_solc,
+)  # Não foi comentado a instalação do install_solc
+
+  # ativar c++ visual studio 09/06/2022 --> 14.00
+
+
+# Arquivo texto em variável de arquivo, igual no C.
+with open("./SimpleStorage.sol", "r") as file:
+    simple_storage_arquivo = file.read()
+
+# Compilar o arquivo Solidity
+install_solc("0.8.0")  # De novo, não foi comentado a instalação do install_solc.
+ctt_compilado = compile_standard(
+    {
+        "language": "Solidity",
+        "sources": {"SimpleStorage.sol": {"content": simple_storage_arquivo}},
+        "settings": {
+            "outputSelection": {
+                "*": {"*": ["abi", "metadata", "evm.bytecode", "evm.sourceMap"]}
+            }
+        },
+    },
+    solc_version="0.8.0",
+)
+
+# Imprimir a sintaxe de baixo nível
+# print(compiled_sol)
+
+# Salvar o compilado em um arquivo novo.
+# Usamos a sintaxe json pois ela formata melhor codigos de abi, ultra-importantes.
+with open("compiled_code.json", "w") as file:
+    json.dump(ctt_compilado, file)
+
+# Ativando um contrato -- precisa do bytecode e do abi
+bytecode = ctt_compilado["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["evm"][
+    "bytecode"
+]["object"]
+abi = ctt_compilado["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
+with open("abi_archive.json", "w") as file:
+    json.dump(abi, file)
+
+# Precisamos, agora, baixar o Ganache - uma VM Blockchain local, que nem a JS VM do REMIX.
+ProvedorWeb3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
+# Estudar documentação de provider 3:55:00 e da WEB3.PY
+idChain = 1337  # --> A network ID do Ganache é NECESSÁRIAMENTE 1337. Altere as configurações do servidor Ganache.
+add_me = "0x02b44b89506672ec2417234Cf5c66e883C2CcE49"
+key_priv = os.getenv("PRIVATE_KEY")  # Configura sua chave privada pelo terminal!
+
+# Sempre coloque o 0x na frente.
+# OBS: Colocar sua private_key no código é HORRÍVEL! PODEM ROUBAR SEUS FUNDOS. JAMAIS FAÇA ISSO.
+# Para adicionar private_keys de forma segura, teremos de usar environment variables e BROWNIE.
+# Criar o contrato em Python
+SimpleStorage = ProvedorWeb3.eth.contract(
+    abi=abi, bytecode=bytecode
+)  # Contrato construído - não ativado.
+# Nonce (!=!=!= do nonce de criptografia blockchain. Aqui é o número de transações feitas pela conta.)
+nonce = ProvedorWeb3.eth.getTransactionCount(add_me)
+# print(nonce)
+
+# Criar a transação
+transaction = SimpleStorage.constructor().buildTransaction(
+    {
+        "gasPrice": ProvedorWeb3.eth.gas_price,  # Não pode faltar o preço do gas --> curso do Patrick não contou com isso
+        "chainId": idChain,
+        "from": add_me,
+        "nonce": nonce,
+    }
+)
+# print(transaction)
+# Assinar transação "transaction" com nossa "private_key"
+assinado = ProvedorWeb3.eth.account.sign_transaction(transaction, private_key=key_priv)
+
+# Enviar transação
+hash_assinado = ProvedorWeb3.eth.send_raw_transaction(assinado.rawTransaction)
